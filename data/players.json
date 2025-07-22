@@ -1,0 +1,18 @@
+[
+  {
+    "playerName": "匿名玩家",
+    "score": 50,
+    "gameTime": 45,
+    "difficulty": "medium",
+    "date": "2023-11-15T08:30:00.000Z",
+    "id": "1700041800000"
+  },
+  {
+    "playerName": "匿名玩家",
+    "score": 30,
+    "gameTime": 28,
+    "difficulty": "easy",
+    "date": "2023-11-15T09:15:00.000Z",
+    "id": "1700044500000"
+  }
+]
