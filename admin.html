@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇游戏 - 管理系统</title>
+    <link id="theme-style" rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .admin-header h1 {
+            margin: 0;
+            color: #4CAF50;
+        }
+        
+        .back-button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background-color: #f9f9f9;
+            border-color: #ddd;
+            border-bottom-color: white;
+            margin-bottom: -1px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .leaderboard-rank {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .rank-1 {
+            color: gold;
+        }
+        
+        .rank-2 {
+            color: silver;
+        }
+        
+        .rank-3 {
+            color: #cd7f32; /* bronze */
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #888;
+            font-style: italic;
+        }
+        
+        .stats-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            flex: 1;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 0 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            margin-top: 0;
+            color: #555;
+            font-size: 16px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>贪吃蛇游戏管理系统</h1>
+            <a href="select.html" class="back-button">返回游戏</a>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="dashboard">数据概览</div>
+            <div class="tab" data-tab="leaderboard">排行榜</div>
+            <div class="tab" data-tab="all-records">所有记录</div>
+        </div>
+        
+        <div id="dashboard" class="tab-content active">
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <h3>总游戏次数</h3>
+                    <div class="stat-value" id="total-games">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>最高分数</h3>
+                    <div class="stat-value" id="highest-score">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>平均分数</h3>
+                    <div class="stat-value" id="average-score">0</div>
+                </div>
+            </div>
+            
+            <h2>最近游戏记录</h2>
+            <div id="recent-records">
+                <div class="no-data">暂无游戏记录</div>
+            </div>
+        </div>
+        
+        <div id="leaderboard" class="tab-content">
+            <h2>玩家排行榜</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>玩家名</th>
+                        <th>分数</th>
+                        <th>用时</th>
+                        <th>难度</th>
+                        <th>日期</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-table">
+                    <tr>
+                        <td colspan="6" class="no-data">暂无排行数据</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="all-records" class="tab-content">
+            <h2>所有游戏记录</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>玩家名</th>
+                        <th>分数</th>
+                        <th>用时</th>
+                        <th>难度</th>
+                        <th>日期</th>
+                    </tr>
+                </thead>
+                <tbody id="all-records-table">
+                    <tr>
+                        <td colspan="5" class="no-data">暂无游戏记录</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 标签切换功能
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 移除所有活动标签
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // 激活当前标签
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // 加载数据
+            loadDashboard();
+            loadLeaderboard();
+            loadAllRecords();
+        });
+        
+        // 加载数据概览
+        async function loadDashboard() {
+            try {
+                const response = await fetch('/api/players');
+                const players = await response.json();
+                
+                if (players.length === 0) {
+                    return;
+                }
+                
+                // 更新统计数据
+                document.getElementById('total-games').textContent = players.length;
+                
+                const highestScore = Math.max(...players.map(p => p.score));
+                document.getElementById('highest-score').textContent = highestScore;
+                
+                const averageScore = Math.round(players.reduce((sum, p) => sum + p.score, 0) / players.length);
+                document.getElementById('average-score').textContent = averageScore;
+                
+                // 显示最近5条记录
+                const recentRecords = [...players]
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 5);
+                
+                const recentRecordsHtml = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>玩家名</th>
+                                <th>分数</th>
+                                <th>用时</th>
+                                <th>难度</th>
+                                <th>日期</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${recentRecords.map(player => `
+                                <tr>
+                                    <td>${player.playerName}</td>
+                                    <td>${player.score}</td>
+                                    <td>${player.gameTime}秒</td>
+                                    <td>${getDifficultyText(player.difficulty)}</td>
+                                    <td>${formatDate(player.date)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                document.getElementById('recent-records').innerHTML = recentRecordsHtml;
+            } catch (error) {
+                console.error('加载数据概览失败:', error);
+            }
+        }
+        
+        // 加载排行榜
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch('/api/leaderboard');
+                const leaderboard = await response.json();
+                
+                if (leaderboard.length === 0) {
+                    return;
+                }
+                
+                const leaderboardHtml = leaderboard.map((player, index) => `
+                    <tr>
+                        <td class="leaderboard-rank ${index < 3 ? 'rank-' + (index + 1) : ''}">${index + 1}</td>
+                        <td>${player.playerName}</td>
+                        <td>${player.score}</td>
+                        <td>${player.gameTime}秒</td>
+                        <td>${getDifficultyText(player.difficulty)}</td>
+                        <td>${formatDate(player.date)}</td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('leaderboard-table').innerHTML = leaderboardHtml;
+            } catch (error) {
+                console.error('加载排行榜失败:', error);
+            }
+        }
+        
+        // 加载所有记录
+        async function loadAllRecords() {
+            try {
+                const response = await fetch('/api/players');
+                const players = await response.json();
+                
+                if (players.length === 0) {
+                    return;
+                }
+                
+                // 按日期降序排序
+                const sortedPlayers = [...players].sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                const recordsHtml = sortedPlayers.map(player => `
+                    <tr>
+                        <td>${player.playerName}</td>
+                        <td>${player.score}</td>
+                        <td>${player.gameTime}秒</td>
+                        <td>${getDifficultyText(player.difficulty)}</td>
+                        <td>${formatDate(player.date)}</td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('all-records-table').innerHTML = recordsHtml;
+            } catch (error) {
+                console.error('加载所有记录失败:', error);
+            }
+        }
+        
+        // 格式化日期
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // 获取难度文本
+        function getDifficultyText(difficulty) {
+            const difficultyMap = {
+                'easy': '简单',
+                'medium': '中等',
+                'hard': '困难'
+            };
+            return difficultyMap[difficulty] || difficulty;
+        }
+    </script>
+</body>
+</html>
